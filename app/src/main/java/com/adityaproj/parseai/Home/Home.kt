@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adityaproj.parseai.R
@@ -33,10 +32,6 @@ import com.adityaproj.parseai.R
 /* -------------------- HOME -------------------- */
 
 @Composable
-fun Home() {
-
-    /* 🔥 STATUS BAR FIX (NO BLACK STRIP) */
-
 
     val activities = listOf(
         Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
@@ -52,13 +47,9 @@ fun Home() {
                     listOf(
                         Color(0xFF08123B),
                         Color(0xFF061142),
-                        Color(0xFF15256E)
                     )
                 )
             )
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(horizontal = 20.dp)
     ) {
 
         LazyColumn(
@@ -85,7 +76,6 @@ fun Home() {
                 }
             }
 
-            item { UploadResumeButton() }
 
             item {
                 Row(
@@ -109,12 +99,10 @@ fun Home() {
                 ActivityItem(it)
             }
 
-            item { Spacer(Modifier.height(90.dp)) }
         }
     }
 }
 
-/* -------------------- LIQUID GLASS STATS CARD -------------------- */
 
 @Composable
 fun StatsCard() {
@@ -148,8 +136,6 @@ fun StatsCard() {
             },
         shape = RoundedCornerShape(22.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.18f)),
-        elevation = CardDefaults.cardElevation(6.dp)
     ) {
 
         Box(
@@ -208,38 +194,11 @@ fun MiniCard(
     modifier: Modifier = Modifier
 ) {
 
-    var pressed by remember { mutableStateOf(false) }
-
-    val scale by animateFloatAsState(
-        if (pressed) 0.96f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
-        label = "miniScale"
-    )
-
     Card(
         modifier = modifier
             .height(140.dp)
-            .padding(8.dp)
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = {
-                        pressed = true
-                        tryAwaitRelease()
-                        pressed = false
-                    }
-                )
-            },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        border = BorderStroke(1.dp, Color.White.copy(alpha = 0.15f)),
-        elevation = CardDefaults.cardElevation(6.dp)
     ) {
 
         Box(
@@ -280,7 +239,6 @@ fun MiniCard(
 /* -------------------- UPLOAD BUTTON -------------------- */
 
 @Composable
-fun UploadResumeButton() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -291,7 +249,6 @@ fun UploadResumeButton() {
                 ),
                 RoundedCornerShape(16.dp)
             )
-            .clickable { },
         contentAlignment = Alignment.Center
     ) {
         Text("Upload Resume", color = Color.White, fontWeight = FontWeight.Bold)
@@ -362,7 +319,6 @@ fun Header() {
 
         Column(modifier = Modifier.weight(1f)) {
             Text("WELCOME BACK", color = Color(0xFF94A3B8), fontSize = 12.sp)
-            Text("Alex Hunter", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
 
         Icon(
@@ -381,11 +337,3 @@ data class Activity(
     val match: String,
     val time: String
 )
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun HomePreview() {
-    MaterialTheme {
-        Home()
-    }
-}
