@@ -26,12 +26,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.adityaproj.parseai.R
 
 /* -------------------- HOME SCREEN -------------------- */
 
 @Composable
-fun Home() {
+fun Home(navController:NavHostController) {
 
     val activities = listOf(
         Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
