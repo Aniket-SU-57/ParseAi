@@ -6,7 +6,9 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun Configuration(modifier: Modifier = Modifier) {
-    Box()
+    Box(){
+
+    }
 
 
 }
