@@ -31,7 +31,7 @@ import com.adityaproj.parseai.R
 /* -------------------- HOME SCREEN -------------------- */
 
 @Composable
-fun HomeScreen() {
+fun Home() {
 
     val activities = listOf(
         Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
