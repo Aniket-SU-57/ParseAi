@@ -3,7 +3,6 @@ package com.adityaproj.parseai.Home
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,9 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adityaproj.parseai.R
 
-/* -------------------- HOME -------------------- */
+/* -------------------- HOME SCREEN -------------------- */
 
 @Composable
+fun HomeScreen() {
 
     val activities = listOf(
         Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
@@ -46,13 +46,14 @@ import com.adityaproj.parseai.R
                 Brush.verticalGradient(
                     listOf(
                         Color(0xFF08123B),
-                        Color(0xFF061142),
+                        Color(0xFF061142)
                     )
                 )
             )
     ) {
 
         LazyColumn(
+            modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
@@ -67,6 +68,7 @@ import com.adityaproj.parseai.R
                         value = "Python",
                         modifier = Modifier.weight(1f)
                     )
+                    Spacer(Modifier.width(12.dp))
                     MiniCard(
                         icon = R.drawable.robothead,
                         title = "Pending",
@@ -75,7 +77,6 @@ import com.adityaproj.parseai.R
                     )
                 }
             }
-
 
             item {
                 Row(
@@ -99,10 +100,14 @@ import com.adityaproj.parseai.R
                 ActivityItem(it)
             }
 
+            item {
+                UploadButton()
+            }
         }
     }
 }
 
+/* -------------------- STATS CARD -------------------- */
 
 @Composable
 fun StatsCard() {
@@ -135,7 +140,7 @@ fun StatsCard() {
                 )
             },
         shape = RoundedCornerShape(22.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
 
         Box(
@@ -193,12 +198,10 @@ fun MiniCard(
     value: String,
     modifier: Modifier = Modifier
 ) {
-
     Card(
-        modifier = modifier
-            .height(140.dp)
+        modifier = modifier.height(140.dp),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
 
         Box(
@@ -239,6 +242,7 @@ fun MiniCard(
 /* -------------------- UPLOAD BUTTON -------------------- */
 
 @Composable
+fun UploadButton() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -248,7 +252,7 @@ fun MiniCard(
                     listOf(Color(0xFF2563EB), Color(0xFF1D4ED8))
                 ),
                 RoundedCornerShape(16.dp)
-            )
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text("Upload Resume", color = Color.White, fontWeight = FontWeight.Bold)
