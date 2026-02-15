@@ -1,20 +1,18 @@
 package com.adityaproj.parseai.NavigationBar
 
-import android.R.attr.scaleX
-import android.R.attr.scaleY
-import android.net.http.SslCertificate.restoreState
-import android.net.http.SslCertificate.saveState
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
@@ -25,6 +23,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -40,8 +39,9 @@ import com.adityaproj.parseai.History.HistoryScreen
 import com.adityaproj.parseai.Home.Home
 import com.adityaproj.parseai.Navigations.BottomRoute
 import com.adityaproj.parseai.Settings.SettingsScreen
-import java.nio.file.Files.size
+import com.adityaproj.parseai.Upload.ResumeUploadScreen
 
+/* -------------------- BOTTOM NAV ITEMS -------------------- */
 
 sealed class BottomNavItem(
     val route: String,
@@ -52,6 +52,8 @@ sealed class BottomNavItem(
     object History : BottomNavItem("history", "History", Icons.Default.CheckCircle)
     object Settings : BottomNavItem("settings", "Settings", Icons.Default.Settings)
 }
+
+/* -------------------- BOTTOM NAV BAR -------------------- */
 
 @Composable
 fun BottomNavBar(navController: NavHostController) {
@@ -65,81 +67,84 @@ fun BottomNavBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // 🌫 Glass container
-    Box(
+    NavigationBar(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 10.dp)
-            .height(80.dp)
-            .background(
-                color = Color.White.copy(alpha = 0.04f), // glass base
-                shape = RoundedCornerShape(24.dp)
-            )
+            .fillMaxWidth()
+            .height(80.dp),
+        containerColor = Color(0xFF020617),
+        tonalElevation = 0.dp
     ) {
-        NavigationBar(
-            modifier = Modifier
-                .fillMaxSize(),
-            containerColor = Color.Transparent, // IMPORTANT for glass
-            tonalElevation = 0.dp
-        ) {
 
-            items.forEach { item ->
+        items.forEach { item ->
 
-                val selected = currentRoute == item.route
+            val selected = currentRoute == item.route
 
-                val scale by animateFloatAsState(
-                    targetValue = if (selected) 1.15f else 1f,
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    ),
-                    label = "iconScale"
-                )
+            val scale by animateFloatAsState(
+                targetValue = if (selected) 1.12f else 1f,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                ),
+                label = "iconScale"
+            )
 
-                val tint by animateColorAsState(
-                    targetValue = if (selected)
-                        Color(0xFF60A5FA) // soft blue
-                    else
-                        Color.White.copy(alpha = 0.65f),
-                    label = "iconTint"
-                )
+            val tint by animateColorAsState(
+                targetValue = if (selected)
+                    Color(0xFF60A5FA)
+                else
+                    Color.White.copy(alpha = 0.6f),
+                label = "iconTint"
+            )
 
-                NavigationBarItem(
-                    selected = selected,
-                    onClick = {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
+            NavigationBarItem(
+                selected = selected,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
                         }
-                    },
-                    icon = {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
                             modifier = Modifier
-                                .size(20.dp)
+                                .size(22.dp)
                                 .graphicsLayer {
                                     scaleX = scale
                                     scaleY = scale
                                 },
                             tint = tint
                         )
-                    },
-                    label = {
-                        Text(
-                            text = item.label,
-                            fontSize = 10.sp,
-                            color = tint
-                        )
-                    },
-                    alwaysShowLabel = true
-                )
-            }
+
+                        AnimatedVisibility(
+                            visible = selected,
+                            enter = fadeIn() + slideInVertically { it / 2 },
+                            exit = fadeOut()
+                        ) {
+                            Text(
+                                text = item.label,
+                                fontSize = 11.sp,
+                                color = tint
+                            )
+                        }
+                    }
+                },
+                alwaysShowLabel = false
+            )
         }
     }
 }
+
+/* -------------------- BOTTOM NAV HOST -------------------- */
 
 @Composable
 fun BottomNavHost(
@@ -154,29 +159,36 @@ fun BottomNavHost(
 
         composable(
             route = BottomRoute.Home.route,
-            deepLinks = listOf(navDeepLink {
-                uriPattern = BottomRoute.Home.deepLink
-            })
+            deepLinks = listOf(
+                navDeepLink { uriPattern = BottomRoute.Home.deepLink }
+            )
         ) {
-            Home()
+            Home(navController)
         }
 
         composable(
             route = BottomRoute.History.route,
-            deepLinks = listOf(navDeepLink {
-                uriPattern = BottomRoute.History.deepLink
-            })
+            deepLinks = listOf(
+                navDeepLink { uriPattern = BottomRoute.History.deepLink }
+            )
         ) {
             HistoryScreen()
         }
 
         composable(
             route = BottomRoute.Settings.route,
-            deepLinks = listOf(navDeepLink {
-                uriPattern = BottomRoute.Settings.deepLink
-            })
+            deepLinks = listOf(
+                navDeepLink { uriPattern = BottomRoute.Settings.deepLink }
+            )
         ) {
             SettingsScreen()
         }
+
+        // 👇 Upload screen (no bottom icon, bottom bar stays visible)
+        composable(BottomRoute.UploadResume.route) {
+            ResumeUploadScreen(navController)
+        }
     }
 }
+
+

@@ -6,13 +6,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.adityaproj.parseai.NavigationBar.BottomNavBar
 import com.adityaproj.parseai.NavigationBar.BottomNavHost
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen( rootNavController: NavController) {
 
     val bottomNavController = rememberNavController()
     val backStackEntry by bottomNavController.currentBackStackEntryAsState()

@@ -9,24 +9,27 @@ import com.adityaproj.parseai.Auth.LoginScreen
 import com.adityaproj.parseai.SplashScreen
 
 @Composable
-fun AppNavHost(modifier: Modifier) {
+fun AppNavHost(modifier: Modifier = Modifier) {
 
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = AppRoute.SplashScreen.route
+        startDestination = AppRoute.SplashScreen.route,
+        modifier = modifier
     ) {
 
         composable(AppRoute.SplashScreen.route) {
             SplashScreen(navController)
         }
+
         composable(AppRoute.LoginScreen.route) {
             LoginScreen(navController)
         }
 
         composable(AppRoute.Dashboard.route) {
-            DashboardScreen()
+            DashboardScreen(rootNavController = navController)
         }
     }
 }
+
