@@ -1,6 +1,5 @@
 package com.adityaproj.parseai.History
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,8 +42,6 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
     var isFocused by remember { mutableStateOf(false) }
 
     val haptic = LocalHapticFeedback.current
-
-    // 🔍 Live Search Filtering
     val filteredActivities = remember(searchQuery) {
         if (searchQuery.isBlank()) activities
         else activities.filter {
@@ -53,11 +50,7 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    // ✨ Glow animation
-    val glowElevation by animateDpAsState(
-        targetValue = if (isFocused) 18.dp else 6.dp,
-        label = "glow"
-    )
+
 
     Box(
         modifier = Modifier
@@ -91,10 +84,11 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .shadow(
-                        elevation = glowElevation,
                         shape = RoundedCornerShape(28.dp),
                         ambientColor = Color(0xFF60A5FA),
-                        spotColor = Color(0xFF60A5FA)
+                        spotColor = Color(0xFF60A5FA),
+                        elevation = TODO()
+
                     ),
                 shape = RoundedCornerShape(28.dp),
                 colors = SearchBarDefaults.colors(
