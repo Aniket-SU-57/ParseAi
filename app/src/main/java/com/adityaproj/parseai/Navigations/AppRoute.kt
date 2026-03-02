@@ -17,4 +17,5 @@ sealed class BottomRoute(
 
     // 👇 hidden screen (no bottom icon, no deep link)
     object UploadResume : BottomRoute("upload")
+    object LoaderScreen: BottomRoute("loader")
 }

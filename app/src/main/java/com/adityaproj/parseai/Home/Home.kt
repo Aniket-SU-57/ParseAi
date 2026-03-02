@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.adityaproj.parseai.Navigations.BottomRoute
 import com.adityaproj.parseai.R
 
 /* -------------------- HOME SCREEN -------------------- */
@@ -48,7 +49,9 @@ fun Home(navController:NavHostController) {
                 Brush.verticalGradient(
                     listOf(
                         Color(0xFF08123B),
-                        Color(0xFF061142)
+                        Color(0xFF061142),
+                        Color(0xFF15256E),
+                        Color(0xFF020617)
                     )
                 )
             )
@@ -81,6 +84,10 @@ fun Home(navController:NavHostController) {
             }
 
             item {
+                UploadButton(navController)
+            }
+
+            item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -102,9 +109,6 @@ fun Home(navController:NavHostController) {
                 ActivityItem(it)
             }
 
-            item {
-                UploadButton()
-            }
         }
     }
 }
@@ -244,7 +248,7 @@ fun MiniCard(
 /* -------------------- UPLOAD BUTTON -------------------- */
 
 @Composable
-fun UploadButton() {
+fun UploadButton(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -254,13 +258,19 @@ fun UploadButton() {
                     listOf(Color(0xFF2563EB), Color(0xFF1D4ED8))
                 ),
                 RoundedCornerShape(16.dp)
-            ),
+            )
+            .clickable {
+                navController.navigate(BottomRoute.UploadResume.route)
+            },
         contentAlignment = Alignment.Center
     ) {
-        Text("Upload Resume", color = Color.White, fontWeight = FontWeight.Bold)
+        Text(
+            "Upload Resume",
+            color = Color.White,
+            fontWeight = FontWeight.Bold
+        )
     }
 }
-
 /* -------------------- ACTIVITY ITEM -------------------- */
 
 @Composable

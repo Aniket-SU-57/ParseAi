@@ -39,7 +39,8 @@ import com.adityaproj.parseai.History.HistoryScreen
 import com.adityaproj.parseai.Home.Home
 import com.adityaproj.parseai.Navigations.BottomRoute
 import com.adityaproj.parseai.Settings.SettingsScreen
-import com.adityaproj.parseai.Upload.ResumeUploadScreen
+import com.adityaproj.parseai.upload.LoaderScreenload
+import com.adityaproj.parseai.upload.ResumeUploadScreen
 
 /* -------------------- BOTTOM NAV ITEMS -------------------- */
 
@@ -188,6 +189,10 @@ fun BottomNavHost(
         composable(BottomRoute.UploadResume.route) {
             ResumeUploadScreen(navController)
         }
+        composable(BottomRoute.LoaderScreen.route) {
+            LoaderScreenload(navController)
+        }
+
     }
 }
 
