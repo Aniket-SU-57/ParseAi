@@ -37,6 +37,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navDeepLink
 import com.adityaproj.parseai.History.HistoryScreen
 import com.adityaproj.parseai.Home.Home
+import com.adityaproj.parseai.Jobconfig.Configurationn
 import com.adityaproj.parseai.Navigations.BottomRoute
 import com.adityaproj.parseai.Settings.SettingsScreen
 import com.adityaproj.parseai.upload.LoaderScreenload
@@ -191,6 +192,9 @@ fun BottomNavHost(
         }
         composable(BottomRoute.LoaderScreen.route) {
             LoaderScreenload(navController)
+        }
+        composable(BottomRoute.Configur.route) {
+            Configurationn(navController)
         }
 
     }

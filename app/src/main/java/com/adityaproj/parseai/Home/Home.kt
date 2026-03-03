@@ -18,23 +18,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.adityaproj.parseai.Navigations.BottomRoute
 import com.adityaproj.parseai.R
 
 /* -------------------- HOME SCREEN -------------------- */
 
 @Composable
-fun Home(navController:NavHostController) {
+fun Home(navController: NavHostController) {
 
     val activities = listOf(
         Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
@@ -66,14 +68,17 @@ fun Home(navController:NavHostController) {
             item { StatsCard() }
 
             item {
-                Row(Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
                     MiniCard(
                         icon = R.drawable.robothead,
                         title = "Top Skill",
                         value = "Python",
                         modifier = Modifier.weight(1f)
                     )
-                    Spacer(Modifier.width(12.dp))
+
                     MiniCard(
                         icon = R.drawable.robothead,
                         title = "Pending",
@@ -84,7 +89,29 @@ fun Home(navController:NavHostController) {
             }
 
             item {
-                UploadButton(navController)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+
+                    ActionButton(
+                        title = "Upload Resume",
+                        icon = R.drawable.robothead,
+                        onClick = {
+                            navController.navigate(BottomRoute.UploadResume.route)
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    ActionButton(
+                        title = "Configure Job",
+                        icon = R.drawable.robothead,
+                        onClick = {
+                            navController.navigate(BottomRoute.Configur.route)
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
             }
 
             item {
@@ -97,6 +124,7 @@ fun Home(navController:NavHostController) {
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
+
                     Text(
                         "See all →",
                         color = Color(0xFF60A5FA),
@@ -108,7 +136,6 @@ fun Home(navController:NavHostController) {
             items(activities) {
                 ActivityItem(it)
             }
-
         }
     }
 }
@@ -126,7 +153,7 @@ fun StatsCard() {
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
         ),
-        label = "statsScale"
+        label = ""
     )
 
     Card(
@@ -204,6 +231,7 @@ fun MiniCard(
     value: String,
     modifier: Modifier = Modifier
 ) {
+
     Card(
         modifier = modifier.height(140.dp),
         shape = RoundedCornerShape(20.dp),
@@ -245,33 +273,88 @@ fun MiniCard(
     }
 }
 
-/* -------------------- UPLOAD BUTTON -------------------- */
+/* -------------------- GLASS ACTION BUTTON -------------------- */
 
 @Composable
-fun UploadButton(navController: NavHostController) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .background(
-                Brush.horizontalGradient(
-                    listOf(Color(0xFF2563EB), Color(0xFF1D4ED8))
-                ),
-                RoundedCornerShape(16.dp)
-            )
-            .clickable {
-                navController.navigate(BottomRoute.UploadResume.route)
+fun ActionButton(
+    title: String,
+    icon: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    var pressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) 0.96f else 1f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = ""
+    )
+
+    Card(
+        modifier = modifier
+            .height(90.dp)
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onPress = {
+                        pressed = true
+                        tryAwaitRelease()
+                        pressed = false
+                        onClick()
+                    }
+                )
             },
-        contentAlignment = Alignment.Center
+        shape = RoundedCornerShape(22.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
-        Text(
-            "Upload Resume",
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.linearGradient(
+                        listOf(
+                            Color.White.copy(alpha = 0.15f),
+                            Color.White.copy(alpha = 0.05f)
+                        )
+                    ),
+                    RoundedCornerShape(22.dp)
+                )
+                .padding(horizontal = 18.dp),
+        ) {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+                Image(
+                    painter = painterResource(icon),
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp)
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Text(
+                    text = title,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                )
+            }
+        }
     }
 }
-/* -------------------- ACTIVITY ITEM -------------------- */
+
 
 @Composable
 fun ActivityItem(activity: Activity) {
@@ -353,3 +436,12 @@ data class Activity(
     val match: String,
     val time: String
 )
+
+/* -------------------- PREVIEW -------------------- */
+
+@Preview(showBackground = true)
+@Composable
+fun HomePreview() {
+    val navController = rememberNavController()
+    Home(navController = navController)
+}
