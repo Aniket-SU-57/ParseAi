@@ -5,6 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
+    //retrofit
 
     private const val BASE_URL = "https://backend-nestjs-zieb.onrender.com/"
 
