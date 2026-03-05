@@ -22,4 +22,5 @@ interface ResumeApi {
     suspend fun getResumeStatus(
         @Path("id") id: String
     ): Response<StatusResponse>
+
 }

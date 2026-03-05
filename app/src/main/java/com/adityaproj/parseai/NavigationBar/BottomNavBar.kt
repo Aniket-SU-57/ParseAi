@@ -186,7 +186,7 @@ fun BottomNavHost(
             SettingsScreen()
         }
 
-        // 👇 Upload screen (no bottom icon, bottom bar stays visible)
+
         composable(BottomRoute.UploadResume.route) {
             ResumeUploadScreen(navController)
         }
