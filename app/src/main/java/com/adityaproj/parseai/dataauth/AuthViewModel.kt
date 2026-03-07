@@ -1,14 +1,19 @@
 package com.adityaproj.parseai.authviewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adityaproj.parseai.Auth.AuthState
+import com.adityaproj.parseai.Auth.TokenManager
 import com.adityaproj.parseai.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel : ViewModel() {
+class AuthViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val tokenManager = TokenManager(getApplication())
 
     private val repository = AuthRepository()
 
@@ -26,13 +31,16 @@ class AuthViewModel : ViewModel() {
             try {
 
                 val response = repository.login(username, password)
-
                 if (response.isSuccessful && response.body() != null) {
 
-                    _authState.value =
-                        AuthState.Success("Login Successful")
+                    val token = response.body()?.access
 
-                } else {
+                    tokenManager.saveToken(token!!)
+
+                    AuthState.Success("Login Successful").also { _authState.value = it }
+                }
+
+                else {
 
                     _authState.value =
                         AuthState.Error("Invalid credentials")

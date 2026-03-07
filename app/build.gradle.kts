@@ -80,4 +80,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.junit:junit:1.1.5")
     androidTestImplementation("androidx.espresso:espresso-core:3.5.1")
+
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }

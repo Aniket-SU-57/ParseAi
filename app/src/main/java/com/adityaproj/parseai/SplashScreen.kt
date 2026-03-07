@@ -30,10 +30,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.adityaproj.parseai.Auth.TokenManager
 import com.adityaproj.parseai.Navigations.AppRoute
-
+import dagger.hilt.android.internal.Contexts.getApplication
 @Composable
 fun SplashScreen(navController: NavController) {
+
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val tokenManager = TokenManager(context)
 
     // Infinite animations
     val infiniteTransition = rememberInfiniteTransition(label = "splashAnim")
@@ -59,13 +63,33 @@ fun SplashScreen(navController: NavController) {
     )
 
     LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(2500)
-        navController.navigate(AppRoute.LoginScreen.route) {
-            popUpTo(AppRoute.SplashScreen.route) {
-                inclusive = true
+
+        // check token immediately
+        val token = tokenManager.getToken()
+
+        // keep splash visible for animation
+        kotlinx.coroutines.delay(2200)
+
+        if (token != null) {
+
+            navController.navigate(AppRoute.Dashboard.route) {
+                popUpTo(AppRoute.SplashScreen.route) {
+                    inclusive = true
+                }
             }
+
+        } else {
+
+            navController.navigate(AppRoute.LoginScreen.route) {
+                popUpTo(AppRoute.SplashScreen.route) {
+                    inclusive = true
+                }
+            }
+
         }
     }
+
+    // ----------- UI BELOW (UNCHANGED) -----------
 
     Box(
         modifier = Modifier
@@ -81,6 +105,7 @@ fun SplashScreen(navController: NavController) {
             ),
         contentAlignment = Alignment.Center
     ) {
+
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
             Image(
@@ -102,7 +127,6 @@ fun SplashScreen(navController: NavController) {
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineLarge,
                 color = Color.White
-
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -155,5 +179,3 @@ fun SplashScreen(navController: NavController) {
         }
     }
 }
-
-
