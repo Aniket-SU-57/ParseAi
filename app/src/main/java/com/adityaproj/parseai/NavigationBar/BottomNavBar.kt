@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -147,10 +148,10 @@ fun BottomNavBar(navController: NavHostController) {
 }
 
 /* -------------------- BOTTOM NAV HOST -------------------- */
-
 @Composable
 fun BottomNavHost(
     navController: NavHostController,
+    rootNavController: NavController,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -183,21 +184,19 @@ fun BottomNavHost(
                 navDeepLink { uriPattern = BottomRoute.Settings.deepLink }
             )
         ) {
-            SettingsScreen()
+            SettingsScreen(rootNavController)
         }
-
 
         composable(BottomRoute.UploadResume.route) {
             ResumeUploadScreen(navController)
         }
+
         composable(BottomRoute.LoaderScreen.route) {
             LoaderScreenload(navController)
         }
+
         composable(BottomRoute.Configur.route) {
             Configurationn(navController)
         }
-
     }
 }
-
-
