@@ -10,31 +10,34 @@ private val Context.dataStore by preferencesDataStore(name = "auth_prefs")
 
 class TokenManager(private val context: Context) {
 
-    private val TOKEN_KEY = stringPreferencesKey("auth_token")
+    private val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+    private val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
 
-    suspend fun saveToken(token: String) {
-
+    // Save both tokens
+    suspend fun saveTokens(access: String, refresh: String) {
         context.dataStore.edit {
-
-            it[TOKEN_KEY] = token
-
+            it[ACCESS_TOKEN_KEY] = access
+            it[REFRESH_TOKEN_KEY] = refresh
         }
     }
 
+    // Get access token
     suspend fun getToken(): String? {
-
         val prefs = context.dataStore.data.first()
-
-        return prefs[TOKEN_KEY]
-
+        return prefs[ACCESS_TOKEN_KEY]
     }
 
+    // Get refresh token
+    suspend fun getRefreshToken(): String? {
+        val prefs = context.dataStore.data.first()
+        return prefs[REFRESH_TOKEN_KEY]
+    }
+
+    // Clear tokens on logout
     suspend fun clearToken() {
-
         context.dataStore.edit {
-
-            it.remove(TOKEN_KEY)
-
+            it.remove(ACCESS_TOKEN_KEY)
+            it.remove(REFRESH_TOKEN_KEY)
         }
     }
 }
