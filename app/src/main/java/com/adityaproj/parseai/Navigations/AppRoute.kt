@@ -2,7 +2,7 @@ package com.adityaproj.parseai.Navigations
 
 sealed class AppRoute(val route: String) {
     object SplashScreen: AppRoute("splash")
-    object LoginScreen: AppRoute("auth")
+    object LoginScreen: AppRoute("login")
     object Dashboard : AppRoute("dashboard")
 
 }
