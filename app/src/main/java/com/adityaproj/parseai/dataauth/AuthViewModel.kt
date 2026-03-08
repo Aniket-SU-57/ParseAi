@@ -33,9 +33,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                 val response = repository.login(username, password)
                 if (response.isSuccessful && response.body() != null) {
 
-                    val token = response.body()?.access
+                    val access = response.body()?.access
+                    val refresh = response.body()?.refresh
 
-                    tokenManager.saveToken(token!!)
+                    tokenManager.saveTokens(access!!, refresh!!)
 
                     AuthState.Success("Login Successful").also { _authState.value = it }
                 }
