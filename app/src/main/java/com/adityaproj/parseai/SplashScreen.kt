@@ -63,11 +63,7 @@ fun SplashScreen(navController: NavController) {
     )
 
     LaunchedEffect(Unit) {
-
-        // check token immediately
         val token = tokenManager.getToken()
-
-        // keep splash visible for animation
         kotlinx.coroutines.delay(2200)
 
         if (token != null) {
@@ -88,8 +84,6 @@ fun SplashScreen(navController: NavController) {
 
         }
     }
-
-    // ----------- UI BELOW (UNCHANGED) -----------
 
     Box(
         modifier = Modifier
