@@ -35,6 +35,7 @@ fun DashboardScreen( rootNavController: NavController) {
 
         BottomNavHost(
             navController = bottomNavController,
+            rootNavController = rootNavController,
             modifier = Modifier.padding(padding)
         )
     }
