@@ -60,7 +60,7 @@ sealed class BottomNavItem(
 
 @Composable
 fun BottomNavBar(navController: NavHostController) {
-    //yes
+
 
     val items = listOf(
         BottomNavItem.Home,
