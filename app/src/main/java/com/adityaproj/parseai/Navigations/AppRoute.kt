@@ -5,6 +5,12 @@ sealed class AppRoute(val route: String) {
     object LoginScreen: AppRoute("login")
     object Dashboard : AppRoute("dashboard")
 
+    object UploadResume : AppRoute("upload")
+
+    object LoaderScreen: AppRoute("loader")
+
+    object Configur: AppRoute("config")
+
 }
 
 sealed class BottomRoute(
@@ -15,8 +21,5 @@ sealed class BottomRoute(
     object History : BottomRoute("history", "parseai://history")
     object Settings : BottomRoute("settings", "parseai://settings")
 
-    // 👇 hidden screen (no bottom icon, no deep link)
-    object UploadResume : BottomRoute("upload")
-    object LoaderScreen: BottomRoute("loader")
-    object Configur: BottomRoute("config")
+
 }
