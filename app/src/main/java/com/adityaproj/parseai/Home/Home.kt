@@ -28,21 +28,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.adityaproj.parseai.Navigations.AppRoute
 import com.adityaproj.parseai.Navigations.BottomRoute
 import com.adityaproj.parseai.R
 
 /* -------------------- HOME SCREEN -------------------- */
 
 @Composable
-fun Home(navController: NavHostController) {
+fun Home(navController: NavController,
+         rootNavController: NavController
+) {
 
-    val activities = listOf(
+    val activities = remember {listOf(
         Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
         Activity("Sarah Smith", "Data Scientist", "85%", "5h ago"),
         Activity("Mike Ross", "Legal Intern", "40%", "1d ago")
-    )
+    )}
 
     Box(
         modifier = Modifier
@@ -60,7 +64,9 @@ fun Home(navController: NavHostController) {
     ) {
 
         LazyColumn(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
@@ -98,7 +104,7 @@ fun Home(navController: NavHostController) {
                         title = "Upload Resume",
                         icon = R.drawable.robothead,
                         onClick = {
-                            navController.navigate(BottomRoute.UploadResume.route)
+                            rootNavController.navigate(AppRoute.UploadResume.route)
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -107,7 +113,7 @@ fun Home(navController: NavHostController) {
                         title = "Configure Job",
                         icon = R.drawable.robothead,
                         onClick = {
-                            navController.navigate(BottomRoute.Configur.route)
+                           rootNavController.navigate(AppRoute.Configur.route)
                         },
                         modifier = Modifier.weight(1f)
                     )
@@ -439,9 +445,3 @@ data class Activity(
 
 /* -------------------- PREVIEW -------------------- */
 
-@Preview(showBackground = true)
-@Composable
-fun HomePreview() {
-    val navController = rememberNavController()
-    Home(navController = navController)
-}

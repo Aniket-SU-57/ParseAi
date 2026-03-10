@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.adityaproj.parseai.Navigations.AppRoute
 import com.adityaproj.parseai.Navigations.BottomRoute
 
 /* ------------------------------------------------ */
@@ -53,7 +54,7 @@ fun ResumeUploadScreen(
         },
         onStartAnalysis = {
             viewModel.startUpload()
-            navController.navigate(BottomRoute.LoaderScreen.route)
+            navController.navigate(AppRoute.LoaderScreen.route)
         }
     )
 }
