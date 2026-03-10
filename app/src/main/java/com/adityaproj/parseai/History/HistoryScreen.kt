@@ -32,12 +32,13 @@ import kotlinx.coroutines.delay
 @Composable
 fun HistoryScreen(modifier: Modifier = Modifier) {
 
-    val activities = listOf(
-        Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
-        Activity("Sarah Smith", "Data Scientist", "85%", "5h ago"),
-        Activity("Mike Ross", "Legal Intern", "40%", "1d ago")
-    )
-
+    val activities = remember {
+        listOf(
+            Activity("John Doe", "Backend Engineer", "98%", "2h ago"),
+            Activity("Sarah Smith", "Data Scientist", "85%", "5h ago"),
+            Activity("Mike Ross", "Legal Intern", "40%", "1d ago")
+        )
+    }
     var searchQuery by remember { mutableStateOf("") }
     
     var debouncedQuery by remember { mutableStateOf("") }
@@ -74,9 +75,10 @@ fun HistoryScreen(modifier: Modifier = Modifier) {
             )
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
             SearchBar(
