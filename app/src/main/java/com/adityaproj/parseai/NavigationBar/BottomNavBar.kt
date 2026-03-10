@@ -5,13 +5,18 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -31,6 +36,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,11 +44,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navDeepLink
 import com.adityaproj.parseai.History.HistoryScreen
 import com.adityaproj.parseai.Home.Home
-import com.adityaproj.parseai.Jobconfig.Configurationn
 import com.adityaproj.parseai.Navigations.BottomRoute
+import com.adityaproj.parseai.Navigations.BottomTab
 import com.adityaproj.parseai.Settings.SettingsScreen
-import com.adityaproj.parseai.upload.LoaderScreenload
-import com.adityaproj.parseai.upload.ResumeUploadScreen
 
 /* -------------------- BOTTOM NAV ITEMS -------------------- */
 
@@ -59,95 +63,60 @@ sealed class BottomNavItem(
 /* -------------------- BOTTOM NAV BAR -------------------- */
 
 @Composable
-fun BottomNavBar(navController: NavHostController) {
+fun BottomNavBar(
+    currentTab: BottomTab,
+    onTabSelected: (BottomTab) -> Unit
+) {
 
-
-    val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.History,
-        BottomNavItem.Settings
-    )
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-
-    NavigationBar(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp),
-        containerColor = Color(0xFF020617),
-        tonalElevation = 0.dp
+            .height(72.dp)
+            .background(Color(0xFF020617)),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
-        items.forEach { item ->
-
-            val selected = currentRoute == item.route
-
-            val scale by animateFloatAsState(
-                targetValue = if (selected) 1.12f else 1f,
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessMedium
-                ),
-                label = "iconScale"
-            )
-
-            val tint by animateColorAsState(
-                targetValue = if (selected)
-                    Color(0xFF60A5FA)
-                else
-                    Color.White.copy(alpha = 0.6f),
-                label = "iconTint"
-            )
-
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                icon = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.label,
-                            modifier = Modifier
-                                .size(22.dp)
-                                .graphicsLayer {
-                                    scaleX = scale
-                                    scaleY = scale
-                                },
-                            tint = tint
-                        )
-
-                        AnimatedVisibility(
-                            visible = selected,
-                            enter = fadeIn() + slideInVertically { it / 2 },
-                            exit = fadeOut()
-                        ) {
-                            Text(
-                                text = item.label,
-                                fontSize = 11.sp,
-                                color = tint
-                            )
-                        }
-                    }
-                },
-                alwaysShowLabel = false
-            )
-        }
+        BottomNavItem(BottomTab.Home, currentTab, onTabSelected)
+        BottomNavItem(BottomTab.History, currentTab, onTabSelected)
+        BottomNavItem(BottomTab.Settings, currentTab, onTabSelected)
     }
 }
 
+@Composable
+fun BottomNavItem(
+    tab: BottomTab,
+    currentTab: BottomTab,
+    onTabSelected: (BottomTab) -> Unit
+) {
+
+    val selected = tab == currentTab
+
+    val icon = when (tab) {
+        BottomTab.Home -> Icons.Default.Home
+        BottomTab.History -> Icons.Default.CheckCircle
+        BottomTab.Settings -> Icons.Default.Settings
+    }
+
+    Column(
+        modifier = Modifier
+            .clickable { onTabSelected(tab) }
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Icon(
+            imageVector = icon,
+            contentDescription = tab.name,
+            tint = if (selected) Color(0xFF60A5FA) else Color.Gray
+        )
+
+        Text(
+            text = tab.name,
+            fontSize = 11.sp,
+            color = if (selected) Color(0xFF60A5FA) else Color.Gray
+        )
+    }
+}
 /* -------------------- BOTTOM NAV HOST -------------------- */
 @Composable
 fun BottomNavHost(
@@ -167,7 +136,10 @@ fun BottomNavHost(
                 navDeepLink { uriPattern = BottomRoute.Home.deepLink }
             )
         ) {
-            Home(navController)
+            Home(navController = navController,
+                rootNavController = rootNavController
+            )
+
         }
 
         composable(
@@ -188,16 +160,6 @@ fun BottomNavHost(
             SettingsScreen(rootNavController)
         }
 
-        composable(BottomRoute.UploadResume.route) {
-            ResumeUploadScreen(navController)
-        }
 
-        composable(BottomRoute.LoaderScreen.route) {
-            LoaderScreenload(navController)
-        }
-
-        composable(BottomRoute.Configur.route) {
-            Configurationn(navController)
-        }
     }
 }

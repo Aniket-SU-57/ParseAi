@@ -1,42 +1,61 @@
 package com.adityaproj.parseai.Navigations
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import com.adityaproj.parseai.History.HistoryScreen
+import com.adityaproj.parseai.Home.Home
 import com.adityaproj.parseai.NavigationBar.BottomNavBar
-import com.adityaproj.parseai.NavigationBar.BottomNavHost
+import com.adityaproj.parseai.Settings.SettingsScreen
+
+enum class BottomTab {
+    Home,
+    History,
+    Settings
+}
 
 @Composable
-fun DashboardScreen( rootNavController: NavController) {
+fun DashboardScreen(rootNavController: NavController) {
 
-    val bottomNavController = rememberNavController()
-    val backStackEntry by bottomNavController.currentBackStackEntryAsState()
-    val currentRoute = backStackEntry?.destination?.route
-
-    val bottomBarVisible = currentRoute in listOf(
-        BottomRoute.Home.route,
-        BottomRoute.History.route,
-        BottomRoute.Settings.route
-    )
+    var currentTab by rememberSaveable { mutableStateOf(BottomTab.Home) }
 
     Scaffold(
         bottomBar = {
-            AnimatedVisibility(visible = bottomBarVisible) {
-                BottomNavBar(bottomNavController)
+            BottomNavBar(
+                currentTab = currentTab,
+                onTabSelected = { currentTab = it }
+            )
+        }
+    ) { innerPadding ->
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+
+            // Home stays alive
+            if (currentTab == BottomTab.Home) {
+                Home(
+                    navController = rootNavController,
+                    rootNavController = rootNavController
+                )
+            }
+
+            // History stays alive
+            if (currentTab == BottomTab.History) {
+                HistoryScreen()
+            }
+
+            // Settings stays alive
+            if (currentTab == BottomTab.Settings) {
+                SettingsScreen(rootNavController)
             }
         }
-    ) { padding ->
-
-        BottomNavHost(
-            navController = bottomNavController,
-            rootNavController = rootNavController,
-            modifier = Modifier.padding(padding)
-        )
     }
 }
