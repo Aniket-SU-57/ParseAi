@@ -59,9 +59,6 @@ fun ResumeUploadScreen(
     )
 }
 
-/* ------------------------------------------------ */
-/* UI CONTENT (Stateless + Preview Friendly)       */
-/* ------------------------------------------------ */
 
 @Composable
 fun ResumeUploadContent(

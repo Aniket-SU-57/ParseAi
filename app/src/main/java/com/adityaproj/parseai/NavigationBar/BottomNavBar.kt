@@ -1,14 +1,6 @@
 package com.adityaproj.parseai.NavigationBar
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +15,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,8 +38,6 @@ import com.adityaproj.parseai.Navigations.BottomRoute
 import com.adityaproj.parseai.Navigations.BottomTab
 import com.adityaproj.parseai.Settings.SettingsScreen
 
-/* -------------------- BOTTOM NAV ITEMS -------------------- */
-
 sealed class BottomNavItem(
     val route: String,
     val label: String,
@@ -60,7 +48,7 @@ sealed class BottomNavItem(
     object Settings : BottomNavItem("settings", "Settings", Icons.Default.Settings)
 }
 
-/* -------------------- BOTTOM NAV BAR -------------------- */
+
 
 @Composable
 fun BottomNavBar(

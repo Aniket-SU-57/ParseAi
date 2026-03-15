@@ -39,7 +39,6 @@ fun DashboardScreen(rootNavController: NavController) {
                 .padding(innerPadding)
         ) {
 
-            // Home stays alive
             if (currentTab == BottomTab.Home) {
                 Home(
                     navController = rootNavController,

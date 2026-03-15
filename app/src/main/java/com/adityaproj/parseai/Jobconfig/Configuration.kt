@@ -74,7 +74,9 @@ fun Configurationn(navController: NavController,modifier: Modifier = Modifier
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(WindowInsets.safeDrawing.asPaddingValues())
+                .imePadding()
+                .padding(18.dp)
                 .verticalScroll(scrollState)
         ) {
 
